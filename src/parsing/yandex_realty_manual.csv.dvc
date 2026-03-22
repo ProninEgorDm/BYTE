@@ -1,0 +1,5 @@
+outs:
+- md5: 0d11058c8a50d8ae5694491a75bd8c8f
+  size: 1682882
+  hash: md5
+  path: yandex_realty_manual.csv
