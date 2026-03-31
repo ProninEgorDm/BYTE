@@ -16,4 +16,8 @@ wheels/
 
 # dvc
 .lock
-.divicignoresrc/parsing/chrome_profile_yandex/
+.divicignore
+
+src/parsing/chrome_profile_yandex/.env
+minio_data/
+minio_config/
