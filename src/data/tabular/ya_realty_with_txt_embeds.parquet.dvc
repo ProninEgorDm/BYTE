@@ -1,0 +1,5 @@
+outs:
+- md5: a5c30c04290c4f3fbbca7dcb94b2b7ef
+  size: 46248664
+  hash: md5
+  path: ya_realty_with_txt_embeds.parquet

@@ -1,0 +1,5 @@
+outs:
+- md5: a406af8f7ef1c2c8fed1464c24cbd717
+  size: 9124571
+  hash: md5
+  path: yandex_realty_cleaned.parquet
