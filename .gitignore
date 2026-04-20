@@ -13,6 +13,7 @@ wheels/
 .csv
 .json
 .jpg
+.parquet
 
 # dvc
 .lock
