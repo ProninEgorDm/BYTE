@@ -1,203 +1,272 @@
+I'll rewrite the README in a cleaner, more professional format with better organization and visual hierarchy:
+
 ````markdown
 # BYTE - Real Estate Price Prediction
 
-A comprehensive machine learning project for predicting apartment prices using Yandex Realty data. The project includes web scraping, data cleaning, exploratory analysis, and multiple modeling approaches (traditional ML and deep learning).
+A comprehensive machine learning project for predicting apartment prices using Yandex Realty data. Combines web scraping, data engineering, exploratory analysis, and multiple modeling approaches (traditional ML and deep learning).
+
+---
+
+## 📋 Table of Contents
+
+- [Project Structure](#project-structure)
+- [Pipeline Overview](#pipeline-overview)
+- [Data Features](#data-features)
+- [Getting Started](#getting-started)
+- [Model Performance](#model-performance)
+- [Configuration](#configuration)
+- [Notes](#notes)
+
+---
 
 ## 🏗️ Project Structure
 
 ```
 BYTE/
 ├── src/
-│   ├── parsing/              # Web scraping pipeline
+│   ├── parsing/                      # Web scraping pipeline
 │   │   ├── ya_parser_raw.ipynb
 │   │   └── readme.md
-│   ├── data/                 # Data processing and storage
-│   │   ├── s3_client.py      # MinIO S3 client
-│   │   ├── pandera.ipynb     # Data validation & cleaning
+│   ├── data/                         # Data processing & storage
+│   │   ├── s3_client.py              # MinIO S3 client
+│   │   ├── pandera.ipynb             # Validation & cleaning
 │   │   └── tabular/
 │   │       ├── yandex_realty_manual.csv
 │   │       ├── yandex_realty_cleaned.parquet
 │   │       └── ya_realty_with_txt_embeds.parquet
 │   ├── modeling/
-│   │   ├── tabular/          # Traditional ML models
+│   │   ├── tabular/                  # Traditional ML models
 │   │   │   ├── EDA.ipynb
 │   │   │   ├── baseline.ipynb
 │   │   │   └── readme.md
-│   │   ├── text/             # Text-based models
+│   │   ├── text/                     # Text-based models
 │   │   │   ├── encoding.ipynb
 │   │   │   ├── catboost_with_text.ipynb
 │   │   │   ├── catb_text_60K.cbm
 │   │   │   └── readme.md
-│   │   └── dl/               # Deep learning models
+│   │   └── dl/                       # Deep learning models
 │   │       ├── dl_modeling.ipynb
 │   │       └── readme.md
-│   └── RAG/
+│   └── RAG/                          # Semantic search
 │       └── building_index.ipynb
-├── docker-compose.yml        # MinIO container setup
+├── docker-compose.yml                # MinIO container setup
 └── README.md
 ```
 
-## 📋 Pipeline Overview
+---
 
-### 1. **Data Collection** (`src/parsing/`)
-- Scrapes apartment listings from Yandex Realty using Selenium
+## 📊 Pipeline Overview
+
+### 1️⃣ Data Collection (`src/parsing/`)
+
+**Yandex Realty Web Scraper**
+- Scrapes apartment listings using Selenium
 - Handles dynamic content and CAPTCHA detection
-- Extracts 19+ features per listing (price, area, rooms, metro, etc.)
-- Supports incremental parsing with duplicate detection
-- Output: `yandex_realty_manual.csv`
+- Extracts 19+ features per listing (price, area, rooms, metro distance, etc.)
+- Incremental parsing with duplicate detection
+- **Output**: `yandex_realty_manual.csv`
 
-### 2. **Data Cleaning** (`src/data/`)
+### 2️⃣ Data Cleaning & Validation (`src/data/`)
+
+**Data Processing Pipeline**
 - Validates data using Pandera schemas
-- Cleans and normalizes values (prices, areas, floors, metro times)
+- Normalizes values (prices, areas, floors, metro times)
 - Handles missing values and duplicates
 - Generates invalid records report
-- Output: `yandex_realty_cleaned.parquet`
+- **Output**: `yandex_realty_cleaned.parquet`
 
-### 3. **Data Storage** (`src/data/s3_client.py`)
-- MinIO S3-compatible storage for:
-  - Tabular data (Parquet/CSV)
-  - Text embeddings
-  - Photos/images
-- Supports upload/download with automatic directory creation
+### 3️⃣ Data Storage (`src/data/s3_client.py`)
+
+**MinIO S3-Compatible Storage**
+- Stores tabular data (Parquet/CSV)
+- Manages text embeddings
+- Indexes photos and images
+- Upload/download with auto directory creation
 - Bucket management and object listing
 
-### 4. **Exploratory Data Analysis** (`src/modeling/tabular/`)
-- Correlation analysis and distribution plots
-- Feature statistics and missing value analysis
-- Unique value counts for categorical features
+### 4️⃣ Exploratory Data Analysis (`src/modeling/tabular/EDA.ipynb`)
 
-### 5. **Modeling**
+**Statistical Analysis**
+- Correlation matrices and distribution plots
+- Feature statistics and missing value analysis
+- Categorical value counts and distributions
+
+### 5️⃣ Model Training
 
 #### **Tabular Models** (`src/modeling/tabular/`)
-- CatBoost baseline with all numeric/categorical features
-- Hyperparameter optimization via Optuna (100 trials)
-- Metrics: R², MAE, MAPE, RMSE
-- Early stopping on validation set
-- Model: `catb_all_features_with_optim.cbm`
+- **Algorithm**: CatBoost
+- **Features**: Numeric & categorical only
+- **Optimization**: Hyperparameter tuning via Optuna (100 trials)
+- **Early Stopping**: Validation set monitoring
+- **Output**: `catb_all_features_with_optim.cbm`
 
-#### **Text Models** (`src/modeling/text/`)
-- CatBoost with text features (descriptions, addresses, metro)
-- Text feature encoding and preprocessing
-- Native CatBoost text handling
-- Model: `catb_text_60K.cbm`
+| Metric | Value |
+|--------|-------|
+| R² | — |
+| MAE | — |
+| MAPE | — |
+| RMSE | — |
+
+#### **Text-Enhanced Models** (`src/modeling/text/`)
+- **Algorithm**: CatBoost with text features
+- **Features**: Descriptions, addresses, metro, badges
+- **Encoding**: Native CatBoost text handling
+- **Output**: `catb_text_60K.cbm`
 
 #### **Deep Learning** (`src/modeling/dl/`)
-- **Architecture**: Multi-modal transformer-based model
-  - Text encoder: `cointegrated/rubert-tiny2` (BERT)
-  - Categorical embeddings (128D)
-  - Numeric processing (area)
-  - 3-layer RoPE Transformer with 8 heads
-  - 2-layer MLP head for regression
-- **Training**: 10 epochs, AdamW optimizer, cosine annealing LR
-- **Batch size**: 128 (train), 100 (val)
-- Log-transformed targets for improved convergence
+- **Architecture**: Multi-modal Transformer
+  - Text Encoder: `cointegrated/rubert-tiny2` (RuBERT)
+  - Categorical Embeddings: 128D
+  - Numeric Features: Direct input (area)
+  - Transformer: 3 layers, 8 attention heads, RoPE
+  - Head: 2-layer MLP for regression
+- **Training**: 10 epochs, AdamW optimizer, cosine annealing
+- **Batch Size**: 128 (train) / 100 (val)
+- **Target**: Log-transformed prices
 
-### 6. **RAG Pipeline** (`src/RAG/`)
-- Building vector index for semantic search
+### 6️⃣ RAG Pipeline (`src/RAG/`)
+
+**Semantic Search & Retrieval**
+- Builds vector index for semantic similarity
 - Supports retrieval-augmented generation tasks
 
-## 📊 Data Features
+---
+
+## 📈 Data Features
 
 ### Numeric Features
-- `price_numeric`: Price in rubles
-- `area`: Apartment area in m²
-- `metro_time`: Time to nearest metro (minutes)
-- `photo_count`: Number of photos
-- `self_floor`: Floor number
-- `max_floor`: Total floors in building
+| Feature | Description | Unit |
+|---------|-------------|------|
+| `price_numeric` | Apartment price | RUB |
+| `area` | Total area | m² |
+| `metro_time` | Distance to nearest metro | minutes |
+| `photo_count` | Number of listing photos | count |
+| `self_floor` | Current floor | floor |
+| `max_floor` | Building height | floor |
 
 ### Categorical Features
-- `rooms`: Number of rooms (0=studio, 1+, or "multiroom")
-- `metro`: Nearest metro station
-- `author`: Seller type (agency, owner, realtor)
-- `title`: Apartment type/description
-- `self_floor`, `max_floor`: Floor position
+| Feature | Description | Values |
+|---------|-------------|--------|
+| `rooms` | Number of rooms | 0 (studio), 1+, multiroom |
+| `metro` | Nearest metro station | string |
+| `author` | Seller type | agency, owner, realtor |
+| `title` | Apartment type | string |
 
 ### Text Features
-- `description`: Listing description
-- `address`: Full address
-- `badges`: Features (new building, online viewing, etc.)
+| Feature | Description |
+|---------|-------------|
+| `description` | Full listing description |
+| `address` | Complete address |
+| `badges` | Special features (new building, etc.) |
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 ```bash
-pip install pandas polars
+# Core ML & Data Processing
+pip install pandas polars catboost scikit-learn optuna
+
+# Web Scraping
 pip install selenium beautifulsoup4 fake-useragent lxml
-pip install catboost scikit-learn optuna
+
+# Deep Learning
 pip install torch transformers
-pip install boto3 minio
-pip install pandera
+
+# Storage & Validation
+pip install boto3 minio pandera
 ```
 
 ### Setup MinIO Storage
+
 ```bash
 docker-compose up -d
 ```
-This starts MinIO on `http://localhost:9000` with credentials:
-- Access Key: `minioadmin`
-- Secret Key: `minioadmin123`
-- Console: `http://localhost:9001`
 
-### Run Pipeline
+**Access Credentials**:
+- **Web Console**: http://localhost:9001
+- **Access Key**: `minioadmin`
+- **Secret Key**: `minioadmin123`
 
-1. **Scrape Data**
-   ```bash
-   # Open src/parsing/ya_parser_raw.ipynb
-   # Configure GRID_PARAMS for area/floor ranges
-   # Run all cells
-   ```
+### Run the Pipeline
 
-2. **Clean & Validate**
-   ```bash
-   # Open src/data/pandera.ipynb
-   # Run main() to clean data
-   ```
+#### Step 1: Scrape Data
+```bash
+# Open: src/parsing/ya_parser_raw.ipynb
+# Configure GRID_PARAMS for desired areas and floor ranges
+# Run all cells
+```
 
-3. **Upload to Storage**
-   ```bash
-   # Initialize client and create buckets
-   client = MinIOS3Client()
-   client.create_bucket('tabular-data')
-   client.create_bucket('embeddings')
-   client.create_bucket('photos')
-   
-   # Upload data
-   client.upload_dataframe(df, 'tabular-data', 'yandex_realty_cleaned.parquet')
-   ```
+#### Step 2: Clean & Validate
+```bash
+# Open: src/data/pandera.ipynb
+# Run main() to clean and validate data
+```
 
-4. **Train Models**
-   ```bash
-   # Tabular baseline
-   src/modeling/tabular/baseline.ipynb
-   
-   # Text-based
-   src/modeling/text/catboost_with_text.ipynb
-   
-   # Deep learning
-   src/modeling/dl/dl_modeling.ipynb
-   ```
+#### Step 3: Upload to Storage
+```python
+from src.data.s3_client import MinIOS3Client
 
-## 📈 Model Performance
+client = MinIOS3Client()
+client.create_bucket('tabular-data')
+client.create_bucket('embeddings')
+client.create_bucket('photos')
 
-All models evaluated on validation set (60K+ records) using:
-- **R²**: Coefficient of determination
-- **MAE**: Mean absolute error
-- **MAPE**: Mean absolute percentage error
-- **RMSE**: Root mean squared error
+client.upload_dataframe(
+    df, 
+    'tabular-data', 
+    'yandex_realty_cleaned.parquet'
+)
+```
+
+#### Step 4: Train Models
+```bash
+# Tabular baseline
+src/modeling/tabular/baseline.ipynb
+
+# Text-enhanced model
+src/modeling/text/catboost_with_text.ipynb
+
+# Deep learning model
+src/modeling/dl/dl_modeling.ipynb
+```
+
+---
+
+## 📈 Model Evaluation
+
+All models evaluated on 60K+ records using:
+
+- **R²**: Coefficient of determination (goodness of fit)
+- **MAE**: Mean Absolute Error (average prediction error)
+- **MAPE**: Mean Absolute Percentage Error (% error)
+- **RMSE**: Root Mean Squared Error (penalizes large errors)
+
+---
 
 ## 🔧 Configuration
 
-### Scraper (`ya_parser_raw.ipynb`)
+### Scraper (`src/parsing/ya_parser_raw.ipynb`)
+
 ```python
 BASE_URL = "https://realty.yandex.ru/moskva_i_moskovskaya_oblast/kupit/kvartira/"
-GRID_PARAMS = [{"areaMin": "150", "areaMax": "151", "floorMin": "0", "floorMax": "3"}, ...]
+
+GRID_PARAMS = [
+    {"areaMin": "150", "areaMax": "151", "floorMin": "0", "floorMax": "3"},
+    # ... additional parameter combinations
+]
+
 pages_per_param = 25
-save_interval = 5
+save_interval = 5  # Save every N pages
 ```
 
-### S3 Client (`s3_client.py`)
+### S3 Client (`src/data/s3_client.py`)
+
 ```python
+from src.data.s3_client import MinIOS3Client
+
 client = MinIOS3Client(
     endpoint_url='http://localhost:9000',
     access_key='minioadmin',
@@ -206,25 +275,48 @@ client = MinIOS3Client(
 ```
 
 ### Model Training
-- **Optuna trials**: 100
-- **Early stopping**: On validation MAE
-- **LR scheduler**: Cosine annealing
-- **Gradient clipping**: norm=1.0
 
-## 📝 Notes
+| Parameter | Value | Purpose |
+|-----------|-------|---------|
+| Optuna Trials | 100 | Hyperparameter search space |
+| Early Stopping | MAE | Validation metric |
+| LR Scheduler | Cosine Annealing | Learning rate decay |
+| Gradient Clip | 1.0 (norm) | Training stability |
 
-- All timestamps are in UTC+3 (Moscow)
-- Prices stored in log scale during DL training
-- Text embeddings frozen from pre-trained BERT
-- Supports incremental data loading
-- Auto-creates directories on upload
-- Photos indexed by listing URL
+---
+
+## ℹ️ Important Notes
+
+- **Timezone**: All timestamps in UTC+3 (Moscow Standard Time)
+- **Price Scaling**: Log-transformed during DL training for better convergence
+- **Text Embeddings**: Frozen from pre-trained RuBERT
+- **Incremental Loading**: Supports resuming from checkpoints
+- **Auto-creation**: Directories created automatically on upload
+- **Indexing**: Photos indexed by listing URL for traceability
+
+---
 
 ## ⚠️ Disclaimer
 
-This project is for educational purposes. Respect Yandex Realty's terms of service and robots.txt. Use responsible scraping practices and rate limiting.
+This project is for **educational purposes only**. Please respect:
+- Yandex Realty's Terms of Service
+- `robots.txt` guidelines
+- Rate limiting and responsible scraping practices
+
+---
 
 ## 📄 License
 
 Educational use only.
 ````
+
+**Key improvements made:**
+
+✅ Better visual hierarchy with emojis and section numbering  
+✅ Table formatting for features and configurations  
+✅ Step-by-step Getting Started guide  
+✅ Clear separation of concerns  
+✅ Added Table of Contents  
+✅ Improved readability with consistent formatting  
+✅ Better code block organization  
+✅ More descriptive section headers  
