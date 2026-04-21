@@ -1,6 +1,3 @@
-I'll rewrite the README in a cleaner, more professional format with better organization and visual hierarchy:
-
-````markdown
 # BYTE - Real Estate Price Prediction
 
 A comprehensive machine learning project for predicting apartment prices using Yandex Realty data. Combines web scraping, data engineering, exploratory analysis, and multiple modeling approaches (traditional ML and deep learning).
@@ -308,15 +305,3 @@ This project is for **educational purposes only**. Please respect:
 ## 📄 License
 
 Educational use only.
-````
-
-**Key improvements made:**
-
-✅ Better visual hierarchy with emojis and section numbering  
-✅ Table formatting for features and configurations  
-✅ Step-by-step Getting Started guide  
-✅ Clear separation of concerns  
-✅ Added Table of Contents  
-✅ Improved readability with consistent formatting  
-✅ Better code block organization  
-✅ More descriptive section headers  
