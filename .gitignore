@@ -29,3 +29,7 @@ env
 
 .yml
 *.yml
+
+.dvc
+.python-version
+.dvcignore
