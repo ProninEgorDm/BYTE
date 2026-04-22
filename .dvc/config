@@ -1,4 +1,0 @@
-[core]
-    remote = minio-storage
-['remote "minio-storage"']
-    url = s3://realty-bucket/dvc-store
