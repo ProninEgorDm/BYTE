@@ -27,4 +27,5 @@ minio_config/
 *.env
 env
 
+.yml
 *.yml
