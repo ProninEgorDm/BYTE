@@ -1,0 +1,28 @@
+# RAG System - Large artifacts tracked by DVC
+
+# ChromaDB storage
+/chroma_db/
+
+# Raw artifacts (tracked by DVC)
+/artifacts/embeddings.npy
+/artifacts/metadata.json
+/artifacts/config.json
+/models/
+/artifacts/
+/chroma_db/
+
+# Temporary files
+*.pyc
+__pycache__/
+.DS_Store
+*.tmp
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

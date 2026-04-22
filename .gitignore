@@ -22,3 +22,9 @@ wheels/
 src/parsing/chrome_profile_yandex/.env
 minio_data/
 minio_config/
+
+/.agent.md
+*.env
+env
+
+*.yml
